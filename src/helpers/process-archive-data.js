@@ -1,4 +1,4 @@
-const Logger = require('./Logger');
+const Logger = require('../Logger');
 
 module.exports = (data, startDate, row) => {
     let startIdx = 1;
