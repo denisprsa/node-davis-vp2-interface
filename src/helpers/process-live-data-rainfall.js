@@ -27,7 +27,7 @@ module.exports = (currentDate, currentRainfall, config) => {
         lastDate.setMilliseconds(0);
 
         if (currentDate <= lastDate) {
-            rain = arrayOfDataInLine[arrayOfDataInLine.length - 1]
+            rain = arrayOfDataInLine[arrayOfDataInLine.length - 2]
             console.log(rain)
             sumRain += Number(rain);
         }
