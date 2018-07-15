@@ -1,0 +1,29 @@
+{
+    "name": "read-from-davis-ws",
+    "version": "1.0.0",
+    "description": "Reading data from weather station",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/denisprsa/node-davis-vp2-interface.git"
+    },
+    "keywords": [
+        "weather",
+        "station",
+        "read",
+        "davis",
+        "vantage",
+        "pro2"
+    ],
+    "author": "denisp",
+    "license": "MIT",
+    "dependencies": {
+        "serialport": "^6.2.1"
+    },
+    "bugs": {
+        "url": "https://github.com/denisprsa/node-davis-vp2-interface/issues"
+    }
+}

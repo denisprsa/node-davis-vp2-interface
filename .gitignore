@@ -1,0 +1,17 @@
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# node_modules
+node_modules
+
+# .vscode
+.vscode
+
+# nyc test coverage
+.nyc_output
+
+# tmp DB
+data

@@ -1,0 +1,4 @@
+{
+    "serialPort": "/home/pi/.wine/dosdevices/com3",
+    "liveReadIntervalSeconds": 120
+}
