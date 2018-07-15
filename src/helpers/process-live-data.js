@@ -11,7 +11,7 @@ module.exports = (data, config) => {
     let minute = date.getMinutes();
 
     // Temperature
-    let temperature = data.readInt16LE(10);
+    let temperature = data.readInt16LE(13);
     temperature = ((temperature / 10) - 32) / 1.8;
     temperature = temperature.toFixed(1);
 
