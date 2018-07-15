@@ -1,4 +1,5 @@
 const request = require('request');
+const fs = require('fs');
 const DataStructure = require('../DataStructure');
 
 function getLastServerTime(config) {
