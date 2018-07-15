@@ -27,7 +27,11 @@
         "url": "https://github.com/denisprsa/node-davis-vp2-interface/issues"
     },
     "devDependencies": {
+        "post-commit": "0.0.1",
         "pre-commit": "^1.2.2"
     },
-    "pre-commit": []
+    "pre-commit": [],
+    "post-commit": [
+        "updateVersionPackage"
+    ]
 }
