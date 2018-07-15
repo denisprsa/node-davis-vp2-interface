@@ -3,12 +3,13 @@ const WeatherStation = require('./src/WeatherStation');
 const config = require('./config/config.json');
 const weatherStation = new WeatherStation(config);
 const Logger = require('./src/Logger');
+const SaveDataToFile = require('./src/helpers/save-data-to-file');
 
 async function main() {
     await weatherStation.wakeUpStation();
     let lastDate = weatherStation.getLastDateFromArchive(config);
     let archiveData = await weatherStation.readFromArchive(lastDate);
-    weatherStation.saveDataToFile(archiveData);
+    SaveDataToFile(archiveData, config.fileDBLocation);
     await weatherStation.startLiveReading(config);
     await weatherStation.close();
 }
