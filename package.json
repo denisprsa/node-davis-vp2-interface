@@ -21,14 +21,14 @@
     "author": "denisp",
     "license": "MIT",
     "dependencies": {
-        "serialport": "^6.2.1"
+        "serialport": "6.2.1"
     },
     "bugs": {
         "url": "https://github.com/denisprsa/node-davis-vp2-interface/issues"
     },
     "devDependencies": {
         "post-commit": "0.0.1",
-        "pre-commit": "^1.2.2"
+        "pre-commit": "1.2.2"
     },
     "pre-commit": [],
     "post-commit": [
