@@ -8,7 +8,7 @@ module.exports = (lastDate) => {
     let minutes = lastDate.getMinutes();
     let addMinutes = 0;
 
-    while (minutes % 2 !== 0) {
+    while (minutes % 5 !== 0) {
         minutes -= 1;
         addMinutes -= 1;
     }

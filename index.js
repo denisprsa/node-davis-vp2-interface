@@ -10,6 +10,7 @@ async function main() {
     await weatherStation.wakeUpStation();
     let lastDate = weatherStation.getLastDateFromArchive(config);
     lastDate = LastDateForArchive(lastDate);
+    Logger.log('Last date: ' + lastDate.toLocaleString())
     let archiveData = await weatherStation.readFromArchive(lastDate);
     SaveDataToFile(archiveData, config.fileDBLocation);
     await weatherStation.startLiveReading(config);
