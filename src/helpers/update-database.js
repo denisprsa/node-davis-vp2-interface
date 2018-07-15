@@ -9,7 +9,8 @@ function getLastServerTime(config) {
                 return reject(err);
             }
 
-            resolve(new Date(body.date));
+            let bodyData = JSON.parse(body);
+            resolve(new Date(bodyData.date));
         });
     });
 }

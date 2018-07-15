@@ -113,7 +113,7 @@ module.exports = class WeatherStation {
         var lines = data.trim().split('\n');
         var lastLine = lines.slice(-1)[0];
         
-        Logger.log('Last Time: ', lastLine);
+        Logger.log(lastLine);
 
         let arrayOfDataInLine = lastLine.split(',');
         let dateTimeArrayLine = arrayOfDataInLine[0].split(' ');
