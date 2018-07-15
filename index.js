@@ -4,10 +4,12 @@ const config = require('./config/config.json');
 const weatherStation = new WeatherStation(config);
 const Logger = require('./src/Logger');
 const SaveDataToFile = require('./src/helpers/save-data-to-file');
+const LastDateForArchive = require('./src/helpers/get-rounded-date-for-archive');
 
 async function main() {
     await weatherStation.wakeUpStation();
     let lastDate = weatherStation.getLastDateFromArchive(config);
+    lastDate = LastDateForArchive(lastDate);
     let archiveData = await weatherStation.readFromArchive(lastDate);
     SaveDataToFile(archiveData, config.fileDBLocation);
     await weatherStation.startLiveReading(config);

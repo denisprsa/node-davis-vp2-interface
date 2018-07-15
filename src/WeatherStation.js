@@ -134,7 +134,7 @@ module.exports = class WeatherStation {
     /**
      * Starts live reading from sensors
      */
-    async startLiveReading(config, timeout) {
+    startLiveReading(config, timeout) {
         if (timeout === undefined) {
             let wantedDate = GetWantedDate();
             let nowDate = new Date();
@@ -143,7 +143,7 @@ module.exports = class WeatherStation {
 
         Logger.log(`Waiting ${timeout / 1000} s`);
 
-        let readData = () => { new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             setTimeout(async () => {
                 Logger.log('Sending "LPS 2 1"')
                 await this.serialPort.write(Buffer.from('LPS 2 1\n'));
@@ -164,9 +164,7 @@ module.exports = class WeatherStation {
                     reject(e);
                 }
             }, timeout);
-        })};
-
-        await readData();
+        });
     }
 
     async close() {
