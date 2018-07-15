@@ -107,10 +107,6 @@ module.exports = class WeatherStation {
         return archiveData;
     }
 
-    getUint16(number) {
-        return new Uint16Array([number])[0]
-    }
-
     getLastDateFromArchive(config) {
         let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
         var lines = data.trim().split('\n');

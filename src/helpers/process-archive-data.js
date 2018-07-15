@@ -1,5 +1,9 @@
 const Logger = require('../Logger');
 
+function getUint16(number) {
+    return new Uint16Array([number])[0]
+}
+
 module.exports = (data, startDate, row) => {
     let startIdx = 1;
     let arr = []
@@ -13,9 +17,9 @@ module.exports = (data, startDate, row) => {
             let year = dateNumber >> 9;
             year = year + 2000;
             let month = dateNumber << 7;
-            month = this.getUint16(month) >> 12;
+            month = getUint16(month) >> 12;
             let day = dateNumber << 11;
-            day = this.getUint16(day) >> 11;
+            day = getUint16(day) >> 11;
 
             // Time
             let timeNumber = data.readInt16LE(startIdx + 2);
