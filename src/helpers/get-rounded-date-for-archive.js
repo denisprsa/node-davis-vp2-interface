@@ -10,7 +10,7 @@ module.exports = (lastDate) => {
 
     while (minutes % 5 !== 0) {
         minutes -= 1;
-        addMinutes -= 1;
+        addMinutes += 1;
     }
 
     lastDate.setMinutes(lastDate.getMinutes() - addMinutes);
