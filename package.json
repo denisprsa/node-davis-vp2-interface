@@ -1,6 +1,6 @@
 {
     "name": "read-from-davis-ws",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Reading data from weather station",
     "main": "index.js",
     "scripts": {
