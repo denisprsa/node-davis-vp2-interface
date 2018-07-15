@@ -6,7 +6,7 @@ const Logger = require('./src/Logger');
 
 async function main() {
     await weatherStation.wakeUpStation();
-    let lastDate = weatherStation.getLastDateFromArchive();
+    let lastDate = weatherStation.getLastDateFromArchive(config);
     let archiveData = await weatherStation.readFromArchive(lastDate);
     weatherStation.saveDataToFile(archiveData);
     await weatherStation.startLiveReading(config);

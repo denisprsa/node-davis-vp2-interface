@@ -145,8 +145,8 @@ module.exports = class WeatherStation {
         return new Uint16Array([number])[0]
     }
 
-    getLastDateFromArchive() {
-        let data = fs.readFileSync('data.csv', 'utf-8');
+    getLastDateFromArchive(config) {
+        let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
         var lines = data.trim().split('\n');
         var lastLine = lines.slice(-1)[0];
         
