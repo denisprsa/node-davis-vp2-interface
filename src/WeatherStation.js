@@ -150,7 +150,7 @@ module.exports = class WeatherStation {
 
                 await this.serialPort.waiForDataToRead();
                 let data = this.serialPort.read();
-                let line = ProcessLiveData(data);
+                let line = ProcessLiveData(data, config);
                 Logger.log('line', line);
 
                 SaveDataToFile([{data: line}], config.fileDBLocation);

@@ -1,6 +1,6 @@
 const Logger = require('../Logger');
 
-module.exports = (data) => {
+module.exports = (data, config) => {
     // Date Time
     let date = new Date();
     let day = date.getDate();
@@ -17,6 +17,8 @@ module.exports = (data) => {
     // Rainfall
     let rainfall = data.readInt16LE(53);
     rainfall = rainfall * 0.2;
+
+    ProcessLiveDataRainFall(date, rainfall, config);
 
     // Barometer
     let barometer = data.readInt16LE(8);
