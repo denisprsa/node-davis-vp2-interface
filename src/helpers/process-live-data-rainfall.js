@@ -1,3 +1,4 @@
+const fs = require('fs');
 
 module.exports = (currentDate, currentRainfall, config) => {
     let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
