@@ -101,7 +101,7 @@ module.exports = class WeatherStation {
 
         // Calculate buffer data from date 
         // And CRC from data
-        let data = GetDateBuffer(date);
+        let data = GetDateBuffer(fromDate);
         let crc = CalculateCRC(data);
 
         // Send DateTime and CRC
