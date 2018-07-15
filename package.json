@@ -4,7 +4,7 @@
     "description": "Reading data from weather station",
     "main": "index.js",
     "scripts": {
-        "updateVersionPackage": "npm version patch"
+        "updateVersionPackage": "npm --no-git-tag-version version patch"
     },
     "repository": {
         "type": "git",
