@@ -6,11 +6,8 @@ module.exports = (currentDate, currentRainfall, config) => {
     let lines = data.trim().split('\n');
     let sumRain = 0;
     let lastLines = lines.slice(-20);
-    
-    console.log(lastLines);
 
     for (line of lastLines) {
-        console.log('Archive Line: ', line);
 
         let arrayOfDataInLine = line.split(',');
         let dateTimeArrayLine = arrayOfDataInLine[0].split(' ');
@@ -28,7 +25,6 @@ module.exports = (currentDate, currentRainfall, config) => {
 
         if (currentDate <= lastDate) {
             rain = arrayOfDataInLine[arrayOfDataInLine.length - 2]
-            console.log(rain)
             sumRain += Number(rain);
         }
     }
