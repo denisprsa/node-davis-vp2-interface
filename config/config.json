@@ -1,5 +1,7 @@
 {
     "serialPort": "/home/pi/.wine/dosdevices/com3",
     "liveReadIntervalSeconds": 120,
-    "fileDBLocation": "data/data.csv"
+    "fileDBLocation": "data/data.csv",
+    "getLastDatabaseDateURL": "http://vremezizki.si/sqlZahteve/getDateLastData.php?passkey=koda",
+    "saveDatabaseData": "http://vremezizki.si/sqlZahteve/dodaj-podatek.php?passkey=koda"
 }

@@ -21,6 +21,7 @@
     "author": "denisp",
     "license": "MIT",
     "dependencies": {
+        "request": "^2.87.0",
         "serialport": "6.2.1"
     },
     "bugs": {
