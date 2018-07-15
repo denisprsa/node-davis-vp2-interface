@@ -1,6 +1,7 @@
 const request = require('request');
 const fs = require('fs');
 const DataStructure = require('../DataStructure');
+const Logger = require('../Logger');
 
 function getLastServerTime(config) {
     return new Promise((resolve, reject) => {
@@ -10,6 +11,7 @@ function getLastServerTime(config) {
             }
 
             let bodyData = JSON.parse(body);
+            Logger.log('Last time from DB: ' + bodyData.date);
             resolve(new Date(bodyData.date));
         });
     });
@@ -54,12 +56,14 @@ function getDataFromArchive(config, fromDate) {
 }
 
 function sendDataToDatabase(config, data) {
+    Logger.log(data);
     return new Promise((resolve, reject) => {
-        request.post(config.saveDatabaseData, { json: data }, (err, httpResponse, body) => {
+        request.post(config.saveDatabaseData, { json: { data: data }}, (err, httpResponse, body) => {
             if (err) {
                 return reject(err);
             }
 
+            Logger.log(body);
             resolve();
         });
     });
