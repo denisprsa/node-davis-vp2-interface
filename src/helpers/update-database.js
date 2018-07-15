@@ -16,7 +16,7 @@ function getLastServerTime(config) {
 function getDataFromArchive(config, fromDate) {
     let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
     let lines = data.trim().split('\n');
-    let data = [];
+    let arr = [];
 
     for (line of lines) {
         let arrayOfDataInLine = line.split(',');
@@ -34,7 +34,7 @@ function getDataFromArchive(config, fromDate) {
         archiveDate.setMilliseconds(0);
 
         if (archiveDate > fromDate) {
-            data.push(new DataStructure(
+            arr.push(new DataStructure(
                 archiveDate,
                 arrayOfDataInLine[1],
                 arrayOfDataInLine[2],
@@ -47,6 +47,8 @@ function getDataFromArchive(config, fromDate) {
             ).convertToDatabaseObject());
         }
     }
+
+    return arr;
 }
 
 function sendDataToDatabase(config, data) {
@@ -64,4 +66,5 @@ function sendDataToDatabase(config, data) {
 module.exports = async (config) => {
     let lastDate = await getLastServerTime(config);
     let data = getDataFromArchive(config, lastDate);
+    await sendDataToDatabase(config, data);
 }
