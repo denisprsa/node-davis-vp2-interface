@@ -1,6 +1,7 @@
 
 const WeatherStation = require('./src/WeatherStation');
-const weatherStation = new WeatherStation();
+const config = require('./config/config.json');
+const weatherStation = new WeatherStation(config);
 
 async function main() {
     await weatherStation.wakeUpStation();

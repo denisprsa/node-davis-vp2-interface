@@ -8,8 +8,8 @@ const GetWantedDate = require('./helpers/')
 const fs = require('fs');
 
 module.exports = class WeatherStation {
-    constructor() {
-        this.serialPort = new SerialPort('/home/pi/.wine/dosdevices/com3');
+    constructor(config) {
+        this.serialPort = new SerialPort(config.serialPort);
         this.ack = new Buffer(new Uint8Array([0x06]));
         this.crc_table = [
             0x0, 0x1021, 0x2042, 0x3063, 0x4084, 0x50a5, 0x60c6, 0x70e7,
