@@ -23,7 +23,7 @@ module.exports = class WeatherStation {
         await this.serialPort.open();
         await this.serialPort.write(Buffer.from('\n'));
         await this.serialPort.waiForDataToRead();
-        let data = this.serialPort.read();
+        let data = await this.serialPort.read();
         
         // Check if response of Line Feed and Carriage Return characters
         if (Buffer.from('\n\r').equals(data)) {
@@ -34,7 +34,7 @@ module.exports = class WeatherStation {
             // Test console with TEST command
             await this.serialPort.write(Buffer.from('TEST\n'));
             await this.serialPort.waiForDataToRead();
-            let testData = this.serialPort.read();
+            let testData = await this.serialPort.read();
             
             // Expect response to equal \n\rTEST\n\r
             if (Buffer.from('\n\rTEST\n\r').equals(testData)) {
@@ -58,7 +58,7 @@ module.exports = class WeatherStation {
         Logger.log('Sending DMPAFT')
         await this.serialPort.write(Buffer.from('DMPAFT\n'));
         await this.serialPort.waiForDataToRead();
-        let testData = this.serialPort.read();
+        let testData = await this.serialPort.read();
 
         // Check response from command DMPAFT
         if (!Buffer.from(new Uint8Array([0x06])).equals(testData)) {
@@ -74,7 +74,7 @@ module.exports = class WeatherStation {
         await this.serialPort.write(Buffer.from(data));
         await this.serialPort.write(crc);
         await this.serialPort.waiForDataToRead();
-        testData = this.serialPort.read();
+        testData = await this.serialPort.read();
 
         // Get number of pages and starting row
         let pages = testData.readInt16LE(1);
@@ -93,7 +93,7 @@ module.exports = class WeatherStation {
         try {
             while (read) {
                 await this.serialPort.waiForDataToRead();
-                testData = this.serialPort.read();
+                testData = await this.serialPort.read();
                 archiveData = archiveData.concat(ProcessArchiveData(testData, fromDate, row));
                 row = undefined;
                 await this.serialPort.write(this.ack);
@@ -149,7 +149,7 @@ module.exports = class WeatherStation {
                 await this.serialPort.write(Buffer.from('LPS 2 1\n'));
 
                 await this.serialPort.waiForDataToRead();
-                let data = this.serialPort.read();
+                let data = await this.serialPort.read();
                 let line = ProcessLiveData(data, config);
                 Logger.log('line', line);
 

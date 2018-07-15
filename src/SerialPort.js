@@ -43,7 +43,11 @@ const serialPortManager = class SerialPortManager {
     }
 
     read() {
-        return this.serial.read();
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(this.serial.read());
+            }, 200);
+        });
     }
 
     waiForDataToRead() {
