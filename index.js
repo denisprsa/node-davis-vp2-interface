@@ -14,7 +14,7 @@ async function main() {
 }
 
 main()
-    .then(()=> {
+    .then(async ()=> {
         Logger.log('Closing connection to weather station.');
         await weatherStation.close();
         Logger.log('Exiting.');
