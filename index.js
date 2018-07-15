@@ -2,21 +2,38 @@
 const WeatherStation = require('./src/WeatherStation');
 const config = require('./config/config.json');
 const weatherStation = new WeatherStation(config);
+const Logger = require('./src/Logger');
 
 async function main() {
     await weatherStation.wakeUpStation();
     let lastDate = weatherStation.getLastDateFromArchive();
     let archiveData = await weatherStation.readFromArchive(lastDate);
     weatherStation.saveDataToFile(archiveData);
-    await weatherStation.startLiveReading();
+    await weatherStation.startLiveReading(config);
     await weatherStation.close();
 }
 
 main()
-    .then(()=> {})
-    .catch(async err => {
+    .then(()=> {
+        Logger.log('Closing connection to weather station.');
         await weatherStation.close();
-        console.log(err);
-        process.exitCode = 1;
-        process.exit();
+        Logger.log('Exiting.');
+    })
+    .catch(async err => {
+        Logger.log('Closing connection to weather station.');
+        await weatherStation.close();
+
+        Logger.log('Error throw.');
+        Logger.error(err);
+
+        process.exit(1);
     });
+
+// Catch and log unexpected rejections
+process.on('unhandledRejection', async (reason, p) => {
+    console.log("Possibly Unhandled Rejection at: Promise ", p, " reason: ", reason);
+    Logger.log('Closing connection to weather station.');
+    await weatherStation.close();
+
+    process.exit(1);
+});

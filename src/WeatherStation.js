@@ -4,7 +4,9 @@ const Logger = require('./Logger');
 const GetDateBuffer = require('./helpers/get-date-buffer');
 const CalculateCRC = require('./helpers/calculate-crc');
 const ProcessArchiveData = require('./helpers/process-archive-data');
-const GetWantedDate = require('./helpers/')
+const GetWantedDate = require('./helpers/');
+const SaveDataToFile = require('./helpers/save-data-to-file');
+const ProcessLiveData = require('./helpers/process-live-data');
 const fs = require('fs');
 
 module.exports = class WeatherStation {
@@ -139,16 +141,6 @@ module.exports = class WeatherStation {
         return archiveData;
     }
 
-    saveDataToFile(data) {
-        let dataToSave = '';
-
-        for (let d of data) {
-            dataToSave += d.data + '\n'
-        }
-
-        fs.appendFileSync('data.csv', dataToSave);
-    }
-
     getUint16(number) {
         return new Uint16Array([number])[0]
     }
@@ -180,7 +172,7 @@ module.exports = class WeatherStation {
     /**
      * Starts live reading from sensors
      */
-    async startLiveReading(timeout) {
+    async startLiveReading(config, timeout) {
         if (timeout === undefined) {
             let wantedDate = GetWantedDate();
             let nowDate = new Date();
@@ -196,15 +188,15 @@ module.exports = class WeatherStation {
 
                 await this.serialPort.waiForDataToRead();
                 let data = this.serialPort.read();
-                let line = this.processLiveData(data);
+                let line = ProcessLiveData(data);
                 Logger.log('line', line);
 
-                this.saveDataToFile([{data: line}]);
+                SaveDataToFile([{data: line}], config.fileDBLocation);
 
                 try {
                     let wantedDate = GetWantedDate();
                     let nowDate = new Date();
-                    await this.startLiveReading(wantedDate - nowDate);
+                    await this.startLiveReading(config, wantedDate - nowDate);
                     resolve();
                 } catch (e) {
                     reject(e);
@@ -213,55 +205,6 @@ module.exports = class WeatherStation {
         });
 
         await readData();
-    }
-
-    processLiveData(data) {
-        // Date Time
-        let date = new Date();
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-        let hour = date.getHours();
-        let minute = date.getMinutes();
-
-        // Temperature
-        let temperature = data.readInt16LE(10);
-        temperature = ((temperature / 10) - 32) / 1.8;
-        temperature = temperature.toFixed(1);
-
-        // Rainfall
-        let rainfall = data.readInt16LE(53);
-        rainfall = rainfall * 0.2;
-
-        // Barometer
-        let barometer = data.readInt16LE(8);
-        barometer = (barometer / 1000) * 33.863753
-        barometer = barometer.toFixed(1);
-
-        // Humidity
-        let humidity = data.readUInt8(34);
-
-        // Avg wind speed
-        let avgWindSpeed = data.readUInt8(15);
-        avgWindSpeed = avgWindSpeed * 1.60934;
-        avgWindSpeed = avgWindSpeed.toFixed(1);
-
-        // High wind speed
-        let highWindSpeed = data.readUInt8(23);
-        highWindSpeed = highWindSpeed * 1.60934;
-        highWindSpeed = highWindSpeed.toFixed(1);
-
-        // Direction wind speed
-        let dirWindSpeed = data.readUInt8(17);
-
-        // Dew point
-        let dewPoint = data.readInt16LE(31);
-        dewPoint = ((dewPoint) - 32) / 1.8;
-        dewPoint = dewPoint.toFixed(1);
-
-        let line = `${day}.${month}.${year} ${hour}:${minute},${temperature},${dewPoint},${humidity},${barometer},${avgWindSpeed},${highWindSpeed},${dirWindSpeed},${rainfall},`
-        Logger.log(line);
-        return line;
     }
 
     async close() {
