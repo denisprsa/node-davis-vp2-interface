@@ -1,5 +1,6 @@
 const Logger = require('../Logger');
 const ProcessLiveDataRainFall = require('./process-live-data-rainfall');
+const fs = require('fs');
 
 module.exports = (data, config) => {
     // Date Time
@@ -19,7 +20,9 @@ module.exports = (data, config) => {
     let rainfall = data.readInt16LE(53);
     rainfall = rainfall * 0.2;
 
-    ProcessLiveDataRainFall(date, rainfall, config);
+
+    let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
+    ProcessLiveDataRainFall(date, rainfall, data);
 
     // Barometer
     let barometer = data.readInt16LE(8);

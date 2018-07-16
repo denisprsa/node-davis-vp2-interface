@@ -4,7 +4,8 @@
     "description": "Reading data from weather station",
     "main": "index.js",
     "scripts": {
-        "updateVersionPackage": "npm --no-git-tag-version version patch"
+        "updateVersionPackage": "npm --no-git-tag-version version patch",
+        "test": "istanbul cover --dir ./test_coverage ./node_modules/mocha/bin/_mocha -- --recursive ./tests"
     },
     "repository": {
         "type": "git",
@@ -24,8 +25,11 @@
         "request": "^2.87.0",
         "serialport": "6.2.1"
     },
+    "devDependencies": {
+        "istanbul": "1.1.0-alpha.1",
+        "mocha": "5.2.0"
+    },
     "bugs": {
         "url": "https://github.com/denisprsa/node-davis-vp2-interface/issues"
-    },
-    "devDependencies": {}
+    }
 }

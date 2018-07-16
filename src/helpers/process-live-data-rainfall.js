@@ -1,8 +1,6 @@
-const fs = require('fs');
 
-module.exports = (currentDate, currentRainfall, config) => {
-    currentDate.setMinutes(currentDate.getMinutes() - 15); 
-    let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
+module.exports = (currentDate, currentRainfall, data) => {
+    currentDate.setMinutes(currentDate.getMinutes() - 15);
     let lines = data.trim().split('\n');
     let sumRain = 0;
     let lastLines = lines.slice(-20);
@@ -22,12 +20,12 @@ module.exports = (currentDate, currentRainfall, config) => {
         lastDate.setMinutes(timeArrayLine[1]);
         lastDate.setSeconds(0);
         lastDate.setMilliseconds(0);
-
+        
         if (currentDate <= lastDate) {
             rain = arrayOfDataInLine[arrayOfDataInLine.length - 2]
             sumRain += Number(rain);
         }
     }
 
-    return sumRain - currentRainfall;
+    return currentRainfall - sumRain;
 };
