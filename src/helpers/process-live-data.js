@@ -21,8 +21,8 @@ module.exports = (data, config) => {
     rainfall = rainfall * 0.2;
 
 
-    let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
-    ProcessLiveDataRainFall(date, rainfall, data);
+    let archiveData = fs.readFileSync(config.fileDBLocation, 'utf-8');
+    ProcessLiveDataRainFall(date, rainfall, archiveData);
 
     // Barometer
     let barometer = data.readInt16LE(8);
