@@ -1,9 +1,9 @@
 
 module.exports = (currentDate, currentRainfall, data) => {
-    currentDate.setMinutes(currentDate.getMinutes() - 15);
+    currentDate.setMinutes(currentDate.getMinutes() - 60);
     let lines = data.trim().split('\n');
     let sumRain = 0;
-    let lastLines = lines.slice(-20);
+    let lastLines = lines.slice(-50);
 
     for (line of lastLines) {
 

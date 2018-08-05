@@ -17,12 +17,12 @@ module.exports = (data, config) => {
     temperature = temperature.toFixed(1);
 
     // Rainfall
-    let rainfall = data.readInt16LE(53);
-    rainfall = rainfall * 0.2;
+    let rainfall1H = data.readInt16LE(55);
+    let rainfall = rainfall1H * 0.2;
 
 
     let archiveData = fs.readFileSync(config.fileDBLocation, 'utf-8');
-    ProcessLiveDataRainFall(date, rainfall, archiveData);
+    rainfall = ProcessLiveDataRainFall(date, rainfall, archiveData);
 
     // Barometer
     let barometer = data.readInt16LE(8);
