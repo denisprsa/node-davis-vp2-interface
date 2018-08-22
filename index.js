@@ -5,7 +5,7 @@ const weatherStation = new WeatherStation(config);
 const Logger = require('./src/Logger');
 const SaveDataToFile = require('./src/helpers/save-data-to-file');
 const LastDateForArchive = require('./src/helpers/get-rounded-date-for-archive');
-const UpdateTime = require('./src/update-time');
+const UpdateTime = require('./src/helpers/update-time');
 
 async function main() {
     await UpdateTime();
