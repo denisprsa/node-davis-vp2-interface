@@ -16,7 +16,7 @@ module.exports = function() {
             }
         } while(networkAvailable === false);
 
-        let pathToScript = path.join(__dirname, 'scripts', 'update-time.sh')
+        let pathToScript = path.join(__dirname, '..', 'scripts', 'update-time.sh')
 
         exec(`sh ${pathToScript}`, (error, stdout, stderr) => {
             Logger.log(`${stdout}`);
