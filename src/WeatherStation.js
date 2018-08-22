@@ -14,6 +14,7 @@ module.exports = class WeatherStation {
     constructor(config) {
         this.serialPort = new SerialPort(config.serialPort);
         this.ack = new Buffer(new Uint8Array([0x06]));
+        this.portOpened = false;
     }
 
     /**
@@ -22,6 +23,7 @@ module.exports = class WeatherStation {
     async wakeUpStation() {
         // Send wake up signal
         await this.serialPort.open();
+        this.portOpened = true;
         await this.serialPort.write(Buffer.from('\n'));
         await this.serialPort.waiForDataToRead();
         let data = await this.serialPort.read();
@@ -187,6 +189,8 @@ module.exports = class WeatherStation {
     }
 
     async close() {
-        await this.serialPort.close();
+        if (this.portOpened) {
+            await this.serialPort.close();
+        }
     }
 }
