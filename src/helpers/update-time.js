@@ -3,6 +3,14 @@ const Logger = require('../Logger');
 const exec = require('child_process').exec;
 const path = require('path');
 
+function wait() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, 1000);
+    });
+}
+
 module.exports = function() {
     return new Promise(async (resolve, reject) => {
         let networkAvailable = false;
@@ -14,6 +22,8 @@ module.exports = function() {
             } catch(e) {
                 Logger.log(e);
             }
+
+            await wait();
         } while(networkAvailable === false);
 
         let pathToScript = path.join(__dirname, '..', 'scripts', 'update-time.sh')
