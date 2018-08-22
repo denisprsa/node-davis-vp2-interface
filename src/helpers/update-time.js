@@ -19,10 +19,9 @@ module.exports = function() {
         let pathToScript = path.join(__dirname, '..', 'scripts', 'update-time.sh')
 
         exec(`sh ${pathToScript}`, (error, stdout, stderr) => {
-            Logger.log(`${stdout}`);
-            Logger.log(`${stderr}`);
+            Logger.log(`out ${stdout}`);
 
-            if (stderr !== null) {
+            if (stderr !== null && stderr.length > 0) {
                 Logger.log(`exec error: ${stderr}`);
                 return reject(stderr);
             }
