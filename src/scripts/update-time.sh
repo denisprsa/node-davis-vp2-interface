@@ -1,4 +1,4 @@
 #!/bin/bash
 
 sudo service ntp stop
-sudo ntpdate si.pool.ntp.org
+sudo ntpdate -u si.pool.ntp.org
