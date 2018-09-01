@@ -25,3 +25,12 @@ describe('Process live rainfall', () => {
         assert.equal(rain, 0.6);
     });
 });
+
+
+describe('Error when processing rain', () => {
+    it('returns -0.2 because of 1 minute overlay', async () => {
+        let lines = fs.readFileSync(path.join(__dirname, 'files/data-error-miss-match.csv'), 'utf-8');
+        let rain = ProcessLiveDataRainFall(new Date('2018-9-1 11:2'), 0, lines);
+        assert.equal(rain, -0.2);
+    });
+});
