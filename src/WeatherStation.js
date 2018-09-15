@@ -173,7 +173,7 @@ module.exports = class WeatherStation {
                 SaveDataToFile([{data: processedData.line}], config.fileDBLocation);
 
                 let date = new Date();
-                let wuDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate() + 1} ${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
+                let wuDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
 
                 let wundergroundURL = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?';
                 wundergroundURL += `ID=${config.wuID}`;
