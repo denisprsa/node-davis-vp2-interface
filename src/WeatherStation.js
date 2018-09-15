@@ -179,15 +179,16 @@ module.exports = class WeatherStation {
                 wundergroundURL += `ID=${config.wuID}`;
                 wundergroundURL += `&PASSWORD=${config.wuPASS}`;
                 wundergroundURL += `&dateutc=${encodeURIComponent(wuDate)}`;
-                wundergroundURL += `&winddir=${processedData.dirWindSpeed}`;
-                wundergroundURL += `&windspeedmph=${processedData.avgWindSpeed}`;
-                wundergroundURL += `&windgustmph=${processedData.highWindSpeed}`;
-                wundergroundURL += `&tempf=${processedData.temperature}`;
-                wundergroundURL += `&rainin=${processedData.rainfall}`;
-                wundergroundURL += `&baromin=${processedData.barometer}`;
-                wundergroundURL += `&dewptf=${processedData.dewPoint}`;
-                wundergroundURL += `&humidity=${processedData.humidity}`;
-                
+                wundergroundURL += `&winddir=${processedData.USData.dirWindSpeed}`;
+                wundergroundURL += `&windspeedmph=${processedData.USData.avgWindSpeed}`;
+                wundergroundURL += `&windgustmph=${processedData.USData.highWindSpeed}`;
+                wundergroundURL += `&tempf=${processedData.USData.temperature}`;
+                wundergroundURL += `&rainin=${processedData.USData.rainfall}`;
+                wundergroundURL += `&baromin=${processedData.USData.barometer}`;
+                wundergroundURL += `&dewptf=${processedData.USData.dewPoint}`;
+                wundergroundURL += `&humidity=${processedData.USData.humidity}`;
+                Logger.log(wundergroundURL);
+
                 try {
                     await SendDataWU(wundergroundURL);
                 } catch (e) {
