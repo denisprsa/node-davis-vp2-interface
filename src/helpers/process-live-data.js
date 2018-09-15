@@ -56,7 +56,7 @@ module.exports = (data, config) => {
 
     // Direction wind speed
     let dirWindSpeed = data.readUInt8(17);
-    USData.dirWindSpeed = dirWindSpeeds;
+    USData.dirWindSpeed = dirWindSpeed;
 
     // Dew point
     let dewPoint = data.readInt16LE(31);
