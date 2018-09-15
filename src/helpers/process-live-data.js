@@ -20,7 +20,6 @@ module.exports = (data, config) => {
 
     // Rainfall
     let rainfall1H = data.readInt16LE(55);
-    USData.temperature = temperature;
     let rainfall = rainfall1H * 0.2;
 
 
@@ -60,7 +59,7 @@ module.exports = (data, config) => {
 
     // Dew point
     let dewPoint = data.readInt16LE(31);
-    USData.dewPoint = dewPoint - 32;
+    USData.dewPoint = dewPoint;
     dewPoint = ((dewPoint) - 32) / 1.8;
     dewPoint = dewPoint.toFixed(1);
 
