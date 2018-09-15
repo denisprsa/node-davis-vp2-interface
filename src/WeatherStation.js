@@ -8,10 +8,12 @@ const GetWantedDate = require('./helpers/get-wanted-date');
 const SaveDataToFile = require('./helpers/save-data-to-file');
 const ProcessLiveData = require('./helpers/process-live-data');
 const SendDataToServer = require('./helpers/update-database');
+const SendDataWU = require('./helpers/send-to-wu');
 const fs = require('fs');
 
 module.exports = class WeatherStation {
     constructor(config) {
+        this.config = config;
         this.serialPort = new SerialPort(config.serialPort);
         this.ack = new Buffer(new Uint8Array([0x06]));
         this.portOpened = false;
@@ -165,10 +167,32 @@ module.exports = class WeatherStation {
 
                 await this.serialPort.waiForDataToRead();
                 let data = await this.serialPort.read();
-                let line = ProcessLiveData(data, config);
-                Logger.log('line', line);
+                let processedData = ProcessLiveData(data, config);
+                Logger.log('line', processedData.line);
 
-                SaveDataToFile([{data: line}], config.fileDBLocation);
+                SaveDataToFile([{data: processedData.line}], config.fileDBLocation);
+
+                let date = new Date();
+                let wuDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDate() + 1} ${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
+
+                let wundergroundURL = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?';
+                wundergroundURL += `ID=${config.wuID}`;
+                wundergroundURL += `&PASSWORD=${config.wuPASS}`;
+                wundergroundURL += `&dateutc=${encodeURIComponent(wuDate)}`;
+                wundergroundURL += `&winddir=${processedData.dirWindSpeed}`;
+                wundergroundURL += `&windspeedmph=${processedData.avgWindSpeed}`;
+                wundergroundURL += `&windgustmph=${processedData.highWindSpeed}`;
+                wundergroundURL += `&tempf=${processedData.temperature}`;
+                wundergroundURL += `&rainin=${processedData.rainfall}`;
+                wundergroundURL += `&baromin=${processedData.barometer}`;
+                wundergroundURL += `&dewptf=${processedData.dewPoint}`;
+                wundergroundURL += `&humidity=${processedData.humidity}`;
+                
+                try {
+                    await SendDataWU(wundergroundURL);
+                } catch (e) {
+                    Logger.error(e);
+                }
 
                 try {
                     await SendDataToServer(config);
