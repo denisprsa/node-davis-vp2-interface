@@ -57,6 +57,7 @@ module.exports = (data, startDate, row) => {
 
             // Direction wind speed
             let dirWindSpeed = data.readUInt8(startIdx + 27);
+            dirWindSpeed = 360 * (dirWindSpeed / 255);
 
             // Dew point
             let dewPoint = temperature - ((100 - humidity)/5);
