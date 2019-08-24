@@ -45,11 +45,13 @@ module.exports = (data, startDate, row) => {
 
             // Avg wind speed
             let avgWindSpeed = data.readUInt8(startIdx + 24);
+            avgWindSpeed =  avgWindSpeed / 2;
             avgWindSpeed = avgWindSpeed * 1.60934;
             avgWindSpeed = avgWindSpeed.toFixed(1);
 
             // High wind speed
             let highWindSpeed = data.readUInt8(startIdx + 25);
+            highWindSpeed = highWindSpeed / 2;
             highWindSpeed = highWindSpeed * 1.60934;
             highWindSpeed = highWindSpeed.toFixed(1);
 

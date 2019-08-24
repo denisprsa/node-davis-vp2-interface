@@ -43,18 +43,20 @@ module.exports = (data, config) => {
 
     // Avg wind speed
     let avgWindSpeed = data.readUInt8(15);
+    avgWindSpeed = avgWindSpeed / 2;
     USData.avgWindSpeed = avgWindSpeed;
     avgWindSpeed = avgWindSpeed * 1.60934;
     avgWindSpeed = avgWindSpeed.toFixed(1);
 
     // High wind speed
-    let highWindSpeed = data.readUInt8(23);
+    let highWindSpeed = data.readInt16LE(23);
+    highWindSpeed = highWindSpeed / 2;
     USData.highWindSpeed = highWindSpeed;
     highWindSpeed = highWindSpeed * 1.60934;
     highWindSpeed = highWindSpeed.toFixed(1);
 
     // Direction wind speed
-    let dirWindSpeed = data.readUInt8(17);
+    let dirWindSpeed = data.readInt16LE(17);
     USData.dirWindSpeed = dirWindSpeed;
 
     // Dew point
