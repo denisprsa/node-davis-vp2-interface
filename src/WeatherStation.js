@@ -7,7 +7,7 @@ const ProcessArchiveData = require('./helpers/process-archive-data');
 const GetWantedDate = require('./helpers/get-wanted-date');
 const SaveDataToFile = require('./helpers/save-data-to-file');
 const ProcessLiveData = require('./helpers/process-live-data');
-const { updateDatabaseData } = require('./helpers/database');
+const { updateDatabaseData, getLastServerTime } = require('./helpers/database');
 const SendDataWU = require('./helpers/send-to-wu');
 const fs = require('fs');
 
@@ -123,42 +123,6 @@ module.exports = class WeatherStation {
         oldestDate.setDate(oldestDate.getDate() - 20);
 
         return oldestDate;
-
-        /*
-        while (true) {
-            let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
-            var lines = data.trim().split('\n');
-            var lastLine = lines.slice(-1)[0];
-            
-            Logger.log(lastLine);
-
-            let arrayOfDataInLine = lastLine.split(',');
-            let dateTimeArrayLine = arrayOfDataInLine[0].split(' ');
-
-            if (dateTimeArrayLine[0] && dateTimeArrayLine[1]) {
-                let dateArrayLine = dateTimeArrayLine[0].split('.');
-                let timeArrayLine = dateTimeArrayLine[1].split(':');
-
-                let lastDate = new Date();
-                lastDate.setFullYear(parseInt(dateArrayLine[2]));
-                lastDate.setMonth(parseInt(dateArrayLine[1] - 1));
-                lastDate.setDate(dateArrayLine[0]);
-                lastDate.setHours(timeArrayLine[0]);
-                lastDate.setMinutes(timeArrayLine[1]);
-                lastDate.setSeconds(0);
-                lastDate.setMilliseconds(0);
-
-                return lastDate;
-            } else {
-                data = fs.readFileSync(config.fileDBLocation, 'utf-8');
-                
-                let splitted = data.split('\n');
-                splitted.splice(splitted.length - 1, 1);
-                let allLinesExceptLast = splitted.join('\n');
-                fs.writeFile(config.fileDBLocation, allLinesExceptLast);
-            }
-        }
-        */
     }
 
     /**
