@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "updateVersionPackage": "npm --no-git-tag-version version patch",
+        "lint": "eslint .",
         "test": "istanbul cover --dir ./test_coverage ./node_modules/mocha/bin/_mocha -- --recursive ./tests"
     },
     "repository": {
@@ -26,6 +27,7 @@
         "serialport": "6.2.1"
     },
     "devDependencies": {
+        "eslint": "^6.8.0",
         "istanbul": "1.1.0-alpha.1",
         "mocha": "5.2.0"
     },

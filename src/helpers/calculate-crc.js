@@ -35,11 +35,11 @@ const crcTable = [
 ];
 
 module.exports = (data) => {
-    let crc = new Uint16Array([0x0000])
+    let crc = new Uint16Array([0x0000]);
 
     for (let d of data) {
-        let leftCrc = new Uint16Array([crc[0] >> 8])
-        let rightCrc = new Uint16Array([crc[0] << 8])
+        let leftCrc = new Uint16Array([crc[0] >> 8]);
+        let rightCrc = new Uint16Array([crc[0] << 8]);
 
         let crcTIdx = leftCrc[0] ^ d;
         let crcT = crcTable[crcTIdx];

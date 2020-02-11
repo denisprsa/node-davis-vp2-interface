@@ -1,8 +1,8 @@
-let dns = require('dns');
+let dns = require("dns");
 
 module.exports = function checkForNetwork() {
     return new Promise((resolve, reject) => {
-        dns.resolve('www.google.com', (err) => {
+        dns.resolve("www.google.com", (err) => {
             if (err) {
                 reject(err);
             } else {
@@ -10,4 +10,4 @@ module.exports = function checkForNetwork() {
             }
         });
     });
-}
+};

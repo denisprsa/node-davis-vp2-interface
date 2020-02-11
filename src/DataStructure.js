@@ -33,6 +33,6 @@ module.exports = class DataStructure {
             winddir: Number(this.directionWind),
             baro: Number(this.barometer),
             rain: Number(this.rainfall)
-        }
+        };
     }
-}
+};

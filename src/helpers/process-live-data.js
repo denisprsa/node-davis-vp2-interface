@@ -1,6 +1,6 @@
-const Logger = require('../Logger');
-const ProcessLiveDataRainFall = require('./process-live-data-rainfall');
-const fs = require('fs');
+const Logger = require("../Logger");
+const ProcessLiveDataRainFall = require("./process-live-data-rainfall");
+const fs = require("fs");
 
 module.exports = (data, config) => {
     // Date Time
@@ -23,7 +23,7 @@ module.exports = (data, config) => {
     let rainfall = rainfall1H * 0.2;
 
 
-    let archiveData = fs.readFileSync(config.fileDBLocation, 'utf-8');
+    let archiveData = fs.readFileSync(config.fileDBLocation, "utf-8");
     rainfall = ProcessLiveDataRainFall(date, rainfall, archiveData);
     if (rainfall < 0) {
         rainfall = 0;
@@ -34,7 +34,7 @@ module.exports = (data, config) => {
     // Barometer
     let barometer = data.readInt16LE(8);
     USData.barometer = (barometer / 1000);
-    barometer = (barometer / 1000) * 33.863753
+    barometer = (barometer / 1000) * 33.863753;
     barometer = barometer.toFixed(1);
 
     // Humidity
@@ -65,7 +65,7 @@ module.exports = (data, config) => {
     dewPoint = ((dewPoint) - 32) / 1.8;
     dewPoint = dewPoint.toFixed(1);
 
-    let line = `${day}.${month}.${year} ${hour}:${minute},${temperature},${dewPoint},${humidity},${barometer},${avgWindSpeed},${highWindSpeed},${dirWindSpeed},${rainfall},`
+    let line = `${day}.${month}.${year} ${hour}:${minute},${temperature},${dewPoint},${humidity},${barometer},${avgWindSpeed},${highWindSpeed},${dirWindSpeed},${rainfall},`;
     Logger.log(line);
     return { line: line, USData: USData };
 };

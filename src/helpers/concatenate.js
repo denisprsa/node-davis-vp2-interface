@@ -11,4 +11,4 @@ module.exports = (resultConstructor, ...arrays) => {
         offset += arr.length;
     }
     return result;
-}
+};

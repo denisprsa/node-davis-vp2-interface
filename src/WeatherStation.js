@@ -1,15 +1,14 @@
 
-const SerialPort = require('./SerialPort');
-const Logger = require('./Logger');
-const GetDateBuffer = require('./helpers/get-date-buffer');
-const CalculateCRC = require('./helpers/calculate-crc');
-const ProcessArchiveData = require('./helpers/process-archive-data');
-const GetWantedDate = require('./helpers/get-wanted-date');
-const SaveDataToFile = require('./helpers/save-data-to-file');
-const ProcessLiveData = require('./helpers/process-live-data');
-const { updateDatabaseData, getLastServerTime } = require('./helpers/database');
-const SendDataWU = require('./helpers/send-to-wu');
-const fs = require('fs');
+const SerialPort = require("./SerialPort");
+const Logger = require("./Logger");
+const GetDateBuffer = require("./helpers/get-date-buffer");
+const CalculateCRC = require("./helpers/calculate-crc");
+const ProcessArchiveData = require("./helpers/process-archive-data");
+const GetWantedDate = require("./helpers/get-wanted-date");
+const SaveDataToFile = require("./helpers/save-data-to-file");
+const ProcessLiveData = require("./helpers/process-live-data");
+const { updateDatabaseData, getLastServerTime } = require("./helpers/database");
+const SendDataWU = require("./helpers/send-to-wu");
 
 module.exports = class WeatherStation {
     constructor(config) {
@@ -19,40 +18,37 @@ module.exports = class WeatherStation {
         this.portOpened = false;
     }
 
-    /**
-     * Wakes up weather station
-     */
     async wakeUpStation() {
         // Send wake up signal
         await this.serialPort.open();
         this.portOpened = true;
-        await this.serialPort.write(Buffer.from('\n'));
+        await this.serialPort.write(Buffer.from("\n"));
         await this.serialPort.waiForDataToRead();
         let data = await this.serialPort.read();
         
         // Check if response of Line Feed and Carriage Return characters
-        if (Buffer.from('\n\r').equals(data)) {
+        if (Buffer.from("\n\r").equals(data)) {
             // Success
-            Logger.log('Weather station woke up.');
-            Logger.log('Sending "TEST" command.');
+            Logger.log("Weather station woke up.");
+            Logger.log("Sending \"TEST\" command.");
 
             // Test console with TEST command
-            await this.serialPort.write(Buffer.from('TEST\n'));
+            await this.serialPort.write(Buffer.from("TEST\n"));
             await this.serialPort.waiForDataToRead();
             let testData = await this.serialPort.read();
             
             // Expect response to equal \n\rTEST\n\r
-            if (Buffer.from('\n\rTEST\n\r').equals(testData)) {
-                Logger.log('Command "TEST" successful.');
+            if (Buffer.from("\n\rTEST\n\r").equals(testData)) {
+                Logger.log("Command \"TEST\" successful.");
             } else {
-                Logger.log('Command "TEST" failed.');
-                throw new (Error('Command TEST failed'));
+                Logger.log("Command \"TEST\" failed.");
+                throw new (Error("Command TEST failed"));
             }
 
             return;
         }
 
-        throw new Error()
+        throw new Error();
     }
 
     /**
@@ -60,14 +56,14 @@ module.exports = class WeatherStation {
      */
     async readFromArchive(fromDate) {
         // Send DMPAFT command
-        Logger.log('Sending DMPAFT')
-        await this.serialPort.write(Buffer.from('DMPAFT\n'));
+        Logger.log("Sending DMPAFT");
+        await this.serialPort.write(Buffer.from("DMPAFT\n"));
         await this.serialPort.waiForDataToRead();
         let testData = await this.serialPort.read();
 
         // Check response from command DMPAFT
         if (!Buffer.from(new Uint8Array([0x06])).equals(testData)) {
-            throw new Error('Invalid response from command "DMPAFT"');
+            throw new Error("Invalid response from command \"DMPAFT\"");
         }
 
         // Calculate buffer data from date
@@ -85,8 +81,8 @@ module.exports = class WeatherStation {
         let pages = testData.readInt16LE(1);
         let row = testData.readInt16LE(3);
 
-        console.log('PAGE: ', pages);
-        console.log('ROW: ', row);
+        console.log("PAGE: ", pages);
+        console.log("ROW: ", row);
         
         // ACK to start receiving measurements
         await this.serialPort.write(this.ack);
@@ -104,7 +100,7 @@ module.exports = class WeatherStation {
                 await this.serialPort.write(this.ack);
             }
         } catch (e) {
-            if (e.message !== 'No data') {
+            if (e.message !== "No data") {
                 throw e;
             }
         }
@@ -139,20 +135,20 @@ module.exports = class WeatherStation {
 
         return new Promise((resolve, reject) => {
             setTimeout(async () => {
-                Logger.log('Sending "LPS 2 1"')
-                await this.serialPort.write(Buffer.from('LPS 2 1\n'));
+                Logger.log("Sending \"LPS 2 1\"");
+                await this.serialPort.write(Buffer.from("LPS 2 1\n"));
 
                 await this.serialPort.waiForDataToRead();
                 let data = await this.serialPort.read();
                 let processedData = ProcessLiveData(data, config);
-                Logger.log('line', processedData.line);
+                Logger.log("line", processedData.line);
 
                 SaveDataToFile([{data: processedData.line}], config.fileDBLocation);
 
                 let date = new Date();
                 let wuDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
 
-                let wundergroundURL = 'https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?';
+                let wundergroundURL = "https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?";
                 wundergroundURL += `ID=${config.wuID}`;
                 wundergroundURL += `&PASSWORD=${config.wuPASS}`;
                 wundergroundURL += `&dateutc=${encodeURIComponent(wuDate)}`;
@@ -195,4 +191,4 @@ module.exports = class WeatherStation {
             await this.serialPort.close();
         }
     }
-}
+};

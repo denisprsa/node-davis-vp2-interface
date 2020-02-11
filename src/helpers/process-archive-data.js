@@ -1,17 +1,17 @@
-const Logger = require('../Logger');
+const Logger = require("../Logger");
 
 function getUint16(number) {
-    return new Uint16Array([number])[0]
+    return new Uint16Array([number])[0];
 }
 
 module.exports = (data, startDate, row) => {
     let startIdx = 1;
-    let arr = []
+    let arr = [];
     let count = 0;
 
     while (startIdx < 260) {
         if (count >= row || row === undefined) {
-            let dateNumber = data.readInt16LE(startIdx)
+            let dateNumber = data.readInt16LE(startIdx);
 
             // Date
             let year = dateNumber >> 9;
@@ -37,7 +37,7 @@ module.exports = (data, startDate, row) => {
 
             // Barometer
             let barometer = data.readInt16LE(startIdx + 14);
-            barometer = (barometer / 1000) * 33.863753
+            barometer = (barometer / 1000) * 33.863753;
             barometer = barometer.toFixed(1);
 
             // Humidity
@@ -63,7 +63,7 @@ module.exports = (data, startDate, row) => {
             let dewPoint = temperature - ((100 - humidity)/5);
             dewPoint = dewPoint.toFixed(1);
 
-            let line = `${day}.${month}.${year} ${hour}:${minute},${temperature},${dewPoint},${humidity},${barometer},${avgWindSpeed},${highWindSpeed},${dirWindSpeed},${rainfall},`
+            let line = `${day}.${month}.${year} ${hour}:${minute},${temperature},${dewPoint},${humidity},${barometer},${avgWindSpeed},${highWindSpeed},${dirWindSpeed},${rainfall},`;
             Logger.log(line);
 
             let dataDate = new Date();
@@ -80,7 +80,7 @@ module.exports = (data, startDate, row) => {
                 arr.push({
                     data: line,
                     date: dataDate
-                })
+                });
             } else {
                 break;
             } 

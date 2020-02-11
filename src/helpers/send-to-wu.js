@@ -1,5 +1,5 @@
-const request = require('request');
-const Logger = require('../Logger');
+const request = require("request");
+const Logger = require("../Logger");
 
 
 module.exports = async (url) => {
@@ -13,4 +13,4 @@ module.exports = async (url) => {
             resolve();
         });
     });
-}
+};
