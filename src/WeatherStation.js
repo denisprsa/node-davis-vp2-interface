@@ -7,7 +7,7 @@ const ProcessArchiveData = require('./helpers/process-archive-data');
 const GetWantedDate = require('./helpers/get-wanted-date');
 const SaveDataToFile = require('./helpers/save-data-to-file');
 const ProcessLiveData = require('./helpers/process-live-data');
-const SendDataToServer = require('./helpers/update-database');
+// const SendDataToServer = require('./helpers/update-database');
 const SendDataWU = require('./helpers/send-to-wu');
 const fs = require('fs');
 
@@ -70,7 +70,7 @@ module.exports = class WeatherStation {
             throw new Error('Invalid response from command "DMPAFT"');
         }
 
-        // Calculate buffer data from date 
+        // Calculate buffer data from date
         // And CRC from data
         let data = GetDateBuffer(fromDate);
         let crc = CalculateCRC(data);
@@ -112,7 +112,19 @@ module.exports = class WeatherStation {
         return archiveData;
     }
 
-    getLastDateFromArchive(config) {
+    async getLastDateFromArchive(config) {
+        try {
+            return await getLastServerTime(config);
+        } catch (e) {
+            Logger.error(e);
+        }
+
+        const oldestDate = new Date();
+        oldestDate.setDate(oldestDate.getDate() - 20);
+
+        return oldestDate;
+
+        /*
         while (true) {
             let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
             var lines = data.trim().split('\n');
@@ -146,6 +158,7 @@ module.exports = class WeatherStation {
                 fs.writeFile(config.fileDBLocation, allLinesExceptLast);
             }
         }
+        */
     }
 
     /**

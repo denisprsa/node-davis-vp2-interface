@@ -10,11 +10,15 @@ const UpdateTime = require('./src/helpers/update-time');
 async function main() {
     await UpdateTime();
     await weatherStation.wakeUpStation();
-    let lastDate = weatherStation.getLastDateFromArchive(config);
+
+    let lastDate = await weatherStation.getLastDateFromArchive(config);
     lastDate = LastDateForArchive(lastDate);
+
     Logger.log('Last date: ' + lastDate.toLocaleString())
+
     let archiveData = await weatherStation.readFromArchive(lastDate);
     SaveDataToFile(archiveData, config.fileDBLocation);
+
     await weatherStation.startLiveReading(config);
     await weatherStation.close();
 }
