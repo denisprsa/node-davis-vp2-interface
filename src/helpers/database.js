@@ -1,7 +1,7 @@
-const request = require('request');
-const fs = require('fs');
-const DataStructure = require('../DataStructure');
-const Logger = require('../Logger');
+const request = require("request");
+const fs = require("fs");
+const DataStructure = require("../DataStructure");
+const Logger = require("../Logger");
 
 function getLastServerTime(config) {
     return new Promise((resolve, reject) => {
@@ -11,22 +11,22 @@ function getLastServerTime(config) {
             }
 
             let bodyData = JSON.parse(body);
-            Logger.log('Last time from DB: ' + bodyData.date);
+            Logger.log("Last time from DB: " + bodyData.date);
             resolve(new Date(bodyData.date));
         });
     });
 }
 
 function getDataFromArchive(config, fromDate) {
-    let data = fs.readFileSync(config.fileDBLocation, 'utf-8');
-    let lines = data.trim().split('\n');
+    let data = fs.readFileSync(config.fileDBLocation, "utf-8");
+    let lines = data.trim().split("\n");
     let arr = [];
 
-    for (line of lines) {
-        let arrayOfDataInLine = line.split(',');
-        let dateTimeArrayLine = arrayOfDataInLine[0].split(' ');
-        let dateArrayLine = dateTimeArrayLine[0].split('.');
-        let timeArrayLine = dateTimeArrayLine[1].split(':');
+    for (let line of lines) {
+        let arrayOfDataInLine = line.split(",");
+        let dateTimeArrayLine = arrayOfDataInLine[0].split(" ");
+        let dateArrayLine = dateTimeArrayLine[0].split(".");
+        let timeArrayLine = dateTimeArrayLine[1].split(":");
     
         let archiveDate = new Date();
         archiveDate.setFullYear(parseInt(dateArrayLine[2]));
@@ -69,8 +69,15 @@ function sendDataToDatabase(config, data) {
     });
 }
 
-module.exports = async (config) => {
+async function updateDatabaseData(config) {
     let lastDate = await getLastServerTime(config);
     let data = getDataFromArchive(config, lastDate);
     await sendDataToDatabase(config, data);
 }
+
+module.exports ={
+    getLastServerTime: getLastServerTime,
+    getDataFromArchive: getDataFromArchive,
+    sendDataToDatabase: sendDataToDatabase,
+    updateDatabaseData: updateDatabaseData
+};

@@ -1,44 +1,48 @@
 
-const WeatherStation = require('./src/WeatherStation');
-const config = require('./config/config.json');
+const WeatherStation = require("./src/WeatherStation");
+const config = require("./config/config.json");
 const weatherStation = new WeatherStation(config);
-const Logger = require('./src/Logger');
-const SaveDataToFile = require('./src/helpers/save-data-to-file');
-const LastDateForArchive = require('./src/helpers/get-rounded-date-for-archive');
-const UpdateTime = require('./src/helpers/update-time');
+const Logger = require("./src/Logger");
+const SaveDataToFile = require("./src/helpers/save-data-to-file");
+const LastDateForArchive = require("./src/helpers/get-rounded-date-for-archive");
+const UpdateTime = require("./src/helpers/update-time");
 
 async function main() {
     await UpdateTime();
     await weatherStation.wakeUpStation();
-    let lastDate = weatherStation.getLastDateFromArchive(config);
+
+    let lastDate = await weatherStation.getLastDateFromArchive(config);
     lastDate = LastDateForArchive(lastDate);
-    Logger.log('Last date: ' + lastDate.toLocaleString())
+
+    Logger.log("Last date: " + lastDate.toLocaleString());
+
     let archiveData = await weatherStation.readFromArchive(lastDate);
     SaveDataToFile(archiveData, config.fileDBLocation);
+
     await weatherStation.startLiveReading(config);
     await weatherStation.close();
 }
 
 main()
     .then(async ()=> {
-        Logger.log('Closing connection to weather station.');
+        Logger.log("Closing connection to weather station.");
         await weatherStation.close();
-        Logger.log('Exiting.');
+        Logger.log("Exiting.");
     })
     .catch(async err => {
-        Logger.log('Closing connection to weather station.');
+        Logger.log("Closing connection to weather station.");
         await weatherStation.close();
 
-        Logger.log('Error throw.');
+        Logger.log("Error throw.");
         Logger.error(err);
 
         process.exit(1);
     });
 
 // Catch and log unexpected rejections
-process.on('unhandledRejection', async (reason, p) => {
+process.on("unhandledRejection", async (reason, p) => {
     console.log("Possibly Unhandled Rejection at: Promise ", p, " reason: ", reason);
-    Logger.log('Closing connection to weather station.');
+    Logger.log("Closing connection to weather station.");
     await weatherStation.close();
 
     process.exit(1);

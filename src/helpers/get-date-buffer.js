@@ -1,4 +1,4 @@
-const Concatenate = require('./concatenate');
+const Concatenate = require("./concatenate");
 
 module.exports = (date) => {
     let day = date.getDate();

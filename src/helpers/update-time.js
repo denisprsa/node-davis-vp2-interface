@@ -1,7 +1,7 @@
-const checkForNetwork = require('./check-for-network');
-const Logger = require('../Logger');
-const exec = require('child_process').exec;
-const path = require('path');
+const checkForNetwork = require("./check-for-network");
+const Logger = require("../Logger");
+const exec = require("child_process").exec;
+const path = require("path");
 
 function wait() {
     return new Promise((resolve) => {
@@ -11,23 +11,23 @@ function wait() {
     });
 }
 
-module.exports = function() {
-    return new Promise(async (resolve, reject) => {
-        let networkAvailable = false;
+module.exports = async function() {
+    let networkAvailable = false;
 
-        do {
-            try {
-                await checkForNetwork();
-                networkAvailable = true;
-            } catch(e) {
-                Logger.log(e);
-            }
+    do {
+        try {
+            await checkForNetwork();
+            networkAvailable = true;
+        } catch(e) {
+            Logger.log(e);
+        }
 
-            await wait();
-        } while(networkAvailable === false);
+        await wait();
+    } while(networkAvailable === false);
 
-        let pathToScript = path.join(__dirname, '..', 'scripts', 'update-time.sh')
+    let pathToScript = path.join(__dirname, "..", "scripts", "update-time.sh");
 
+    return await new Promise((resolve, reject) => {
         exec(`sh ${pathToScript}`, (error, stdout, stderr) => {
             Logger.log(`out ${stdout}`);
 
@@ -39,4 +39,4 @@ module.exports = function() {
             resolve();
         });
     });
-}
+};

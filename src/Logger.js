@@ -8,6 +8,6 @@ const logger = class Logger {
     static error(message) {
         console.error(message);
     }
-}
+};
 
 module.exports = logger;
