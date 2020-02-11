@@ -7,7 +7,7 @@ const ProcessArchiveData = require('./helpers/process-archive-data');
 const GetWantedDate = require('./helpers/get-wanted-date');
 const SaveDataToFile = require('./helpers/save-data-to-file');
 const ProcessLiveData = require('./helpers/process-live-data');
-// const SendDataToServer = require('./helpers/update-database');
+const { updateDatabaseData } = require('./helpers/database');
 const SendDataWU = require('./helpers/send-to-wu');
 const fs = require('fs');
 
@@ -209,7 +209,7 @@ module.exports = class WeatherStation {
                 }
 
                 try {
-                    await SendDataToServer(config);
+                    await updateDatabaseData(config);
                 } catch (e) {
                     Logger.error(e);
                 }
