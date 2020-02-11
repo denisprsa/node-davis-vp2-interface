@@ -148,7 +148,7 @@ module.exports = class WeatherStation {
                 let date = new Date();
                 let wuDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
 
-                let wundergroundURL = "https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php?";
+                let wundergroundURL = config.wundergroundURL;
                 wundergroundURL += `ID=${config.wuID}`;
                 wundergroundURL += `&PASSWORD=${config.wuPASS}`;
                 wundergroundURL += `&dateutc=${encodeURIComponent(wuDate)}`;
