@@ -19,6 +19,10 @@ module.exports = async function() {
             await checkForNetwork();
             networkAvailable = true;
         } catch(e) {
+            if (e.code === "ETIMEOUT") {
+                process.exit(1);
+            }
+
             Logger.log(e);
         }
 
