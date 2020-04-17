@@ -17,7 +17,17 @@ function getLastServerTime(config) {
     });
 }
 
-function getDataFromArchive(config, fromDate) {
+function saveDataToArchive(measurements, config) {
+    const archiveData = getDataFromArchive(config, "", true);
+
+    for (let measurement of measurements) {
+        if (archiveData.some((data) => new Date(data.timestamp * 1000) === measurement.metricData.date) === false) {
+            fs.appendFileSync(config.fileDBLocation, measurement.line + "\n");
+        }
+    }
+}
+
+function getDataFromArchive(config, fromDate, allData = false) {
     let data = fs.readFileSync(config.fileDBLocation, "utf-8");
     let lines = data.trim().split("\n");
     let arr = [];
@@ -37,7 +47,7 @@ function getDataFromArchive(config, fromDate) {
         archiveDate.setSeconds(0);
         archiveDate.setMilliseconds(0);
 
-        if (archiveDate > fromDate) {
+        if (archiveDate > fromDate || allData) {
             arr.push(new DataStructure(
                 archiveDate,
                 arrayOfDataInLine[1],
@@ -75,9 +85,10 @@ async function updateDatabaseData(config) {
     await sendDataToDatabase(config, data);
 }
 
-module.exports ={
-    getLastServerTime: getLastServerTime,
-    getDataFromArchive: getDataFromArchive,
-    sendDataToDatabase: sendDataToDatabase,
-    updateDatabaseData: updateDatabaseData
+module.exports = {
+    getLastServerTime,
+    getDataFromArchive,
+    sendDataToDatabase,
+    updateDatabaseData,
+    saveDataToArchive
 };

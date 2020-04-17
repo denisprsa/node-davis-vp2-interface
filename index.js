@@ -3,7 +3,7 @@ const WeatherStation = require("./src/WeatherStation");
 const config = require("./config/config.json");
 const weatherStation = new WeatherStation(config);
 const Logger = require("./src/Logger");
-const SaveDataToFile = require("./src/helpers/save-data-to-file");
+const { saveDataToArchive } = require("./src/helpers/database");
 const LastDateForArchive = require("./src/helpers/get-rounded-date-for-archive");
 const UpdateTime = require("./src/helpers/update-time");
 
@@ -17,7 +17,7 @@ async function main() {
     Logger.log("Last date: " + lastDate.toLocaleString());
 
     let archiveData = await weatherStation.readFromArchive(lastDate);
-    SaveDataToFile(archiveData, config.fileDBLocation);
+    saveDataToArchive(archiveData, config);
 
     await weatherStation.startLiveReading(config);
     await weatherStation.close();
