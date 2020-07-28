@@ -5,7 +5,7 @@ const Logger = require("../Logger");
 
 function getLastServerTime(config) {
     return new Promise((resolve, reject) => {
-        request.get(config.getLastDatabaseDateURL, (err, httpResponse, body) => {
+        request.get(config.getLastDatabaseDateURL, {timeout:30000}, (err, httpResponse, body) => {
             if (err) {
                 return reject(err);
             }
