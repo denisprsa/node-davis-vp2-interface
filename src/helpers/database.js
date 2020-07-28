@@ -46,7 +46,7 @@ function validateArchiveData(config) {
         }
     }
 
-    fs.writeFileSync(config.fileDBLocationSave || config.fileDBLocation, validatedLines.join("\n"), "utf-8");
+    fs.writeFileSync(config.fileDBLocationSave || config.fileDBLocation, `${validatedLines.join("\n")}\n`, "utf-8");
     return validatedLines;
 }
 
