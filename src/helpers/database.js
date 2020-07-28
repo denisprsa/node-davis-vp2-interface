@@ -17,19 +17,41 @@ function getLastServerTime(config) {
     });
 }
 
+function getLastArchiveTime(config) {
+    const archiveData = getDataFromArchive(config, "", true);
+    const lastLine = archiveData[archiveData.length - 1];
+
+    return new Date(lastLine.timestamp * 1000);
+}
+
 function saveDataToArchive(measurements, config) {
     const archiveData = getDataFromArchive(config, "", true);
+    const lastLine = archiveData[archiveData.length - 1];
 
     for (let measurement of measurements) {
-        if (archiveData.some((data) => new Date(data.timestamp * 1000) === measurement.metricData.date) === false) {
+        if (new Date(lastLine.timestamp * 1000) < measurement.metricData.date) {
             fs.appendFileSync(config.fileDBLocation, measurement.line + "\n");
         }
     }
 }
 
-function getDataFromArchive(config, fromDate, allData = false) {
+function validateArchiveData(config) {
     let data = fs.readFileSync(config.fileDBLocation, "utf-8");
     let lines = data.trim().split("\n");
+    let validatedLines = [];
+
+    for (let line of lines) {
+        if (line.includes(",")) {
+            validatedLines.push(line);
+        }
+    }
+
+    fs.writeFileSync(config.fileDBLocationSave || config.fileDBLocation, validatedLines.join("\n"), "utf-8");
+    return validatedLines;
+}
+
+function getDataFromArchive(config, fromDate, allData = false) {
+    let lines = validateArchiveData(config);
     let arr = [];
 
     for (let line of lines) {
@@ -87,6 +109,7 @@ async function updateDatabaseData(config) {
 
 module.exports = {
     getLastServerTime,
+    getLastArchiveTime,
     getDataFromArchive,
     sendDataToDatabase,
     updateDatabaseData,
