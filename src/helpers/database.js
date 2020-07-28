@@ -90,7 +90,7 @@ function getDataFromArchive(config, fromDate, allData = false) {
 function sendDataToDatabase(config, data) {
     Logger.log(data);
     return new Promise((resolve, reject) => {
-        request.post(config.saveDatabaseData, { json: { data: data }}, (err, httpResponse, body) => {
+        request.post(config.saveDatabaseData, { json: { data: data }, timeout: 30000}, (err, httpResponse, body) => {
             if (err) {
                 return reject(err);
             }
