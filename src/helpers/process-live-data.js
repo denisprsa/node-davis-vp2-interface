@@ -27,7 +27,7 @@ module.exports = (data, config) => {
 
 
     let archiveData = fs.readFileSync(config.fileDBLocation, "utf-8");
-    rainfall = ProcessLiveDataRainFall(date, rainfall, archiveData);
+    rainfall = ProcessLiveDataRainFall(new Date(date), rainfall, archiveData);
     if (rainfall < 0) {
         rainfall = 0;
     }
