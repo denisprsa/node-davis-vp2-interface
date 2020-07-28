@@ -65,6 +65,7 @@ module.exports = (data, startDate, row) => {
             // Direction wind speed
             let dirWindSpeed = data.readUInt8(startIdx + 27);
             dirWindSpeed = dirWindSpeed * 22.5;
+            dirWindSpeed = dirWindSpeed > 360 ? 0 : dirWindSpeed;
             metricData.dirWindSpeed = dirWindSpeed;
 
             // Dew point
