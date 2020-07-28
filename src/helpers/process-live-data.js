@@ -5,6 +5,8 @@ const fs = require("fs");
 module.exports = (data, config) => {
     // Date Time
     let date = new Date();
+    date.setSeconds(0);
+    date.setMilliseconds(0);
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
