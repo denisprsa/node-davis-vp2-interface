@@ -3,23 +3,34 @@ const WeatherStation = require("./src/WeatherStation");
 const config = require("./config/config.json");
 const weatherStation = new WeatherStation(config);
 const Logger = require("./src/Logger");
-const { saveDataToArchive, getLastArchiveTime } = require("./src/helpers/database");
+const { MongoDB } = require("./src/helpers/database");
 const LastDateForArchive = require("./src/helpers/get-rounded-date-for-archive");
 const UpdateTime = require("./src/helpers/update-time");
 
 async function main() {
+    const mongoDB = new MongoDB();
+
+    await mongoDB.initialize(config);
     await UpdateTime();
     await weatherStation.wakeUpStation();
 
-    let lastDate = getLastArchiveTime(config);
-    lastDate = LastDateForArchive(lastDate);
+    const lastDateFromDB = await mongoDB.getLastArchiveTime(config);
+    let formattedLastDate = "";
+    
+    if (lastDateFromDB) {
+        formattedLastDate = LastDateForArchive(lastDateFromDB);
+    } else {
+        let olderDate = new Date();
+        olderDate.setDate(olderDate.getDate() - 14);
+        formattedLastDate = LastDateForArchive(olderDate);
+    }
 
-    Logger.log("Last date: " + lastDate.toLocaleString());
+    Logger.log("Last date: " + formattedLastDate.toLocaleString());
 
-    let archiveData = await weatherStation.readFromArchive(lastDate);
-    saveDataToArchive(archiveData, config);
+    let archiveData = await weatherStation.readFromArchive(formattedLastDate);
+    await mongoDB.saveDataToArchive(archiveData);
 
-    await weatherStation.startLiveReading(config);
+    await weatherStation.startLiveReading(config, mongoDB);
     await weatherStation.close();
 }
 

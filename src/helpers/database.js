@@ -2,6 +2,8 @@ const request = require("request");
 const fs = require("fs");
 const DataStructure = require("../DataStructure");
 const Logger = require("../Logger");
+const { MongoClient, Server } = require("mongodb");
+
 
 function getLastServerTime(config) {
     return new Promise((resolve, reject) => {
@@ -15,6 +17,69 @@ function getLastServerTime(config) {
             resolve(new Date(bodyData.date));
         });
     });
+}
+
+class MongoDB {
+    constructor() {
+        this.collection = "data";
+    }
+
+    initialize(config) {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(config.mongodb.uri, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
+                if (err) {
+                    reject(err);
+                }
+
+                this.db = client.db(config.mongodb.database);
+                this.client = client;
+                resolve();
+            });
+        });
+    }
+
+    async close() {
+        if (this.client) {
+            await this.client.close(true);
+        }
+    }
+
+    async getLastArchiveTime() {
+        const lastRecord = await this.db
+            .collection(this.collection)
+            .find({}, {projection:{_id: 0}})
+            .sort({"date": -1})
+            .limit(1)
+            .toArray();
+
+        return lastRecord.length ? lastRecord[0].date : null;
+    }
+
+    async getMeasurements(fromDate) {
+        let query = {};
+
+        if (fromDate) {
+            query.date = {"$gte": fromDate};
+        }
+
+        const measurements = await this.db
+            .collection(this.collection)
+            .find({}, {projection:{_id: 0}})
+            .sort({"date": -1})
+            .limit(1)
+            .toArray();
+
+        return measurements;
+    }
+
+    async saveDataToArchive(measurements) {
+        const items = measurements.map(value => value.metricData);
+        const response = await this.db
+            .collection(this.collection)
+            .insertMany(items);
+
+        return response.insertedCount;
+    }
 }
 
 function getLastArchiveTime(config) {
@@ -50,36 +115,22 @@ function validateArchiveData(config) {
     return validatedLines;
 }
 
-function getDataFromArchive(config, fromDate, allData = false) {
-    let lines = validateArchiveData(config);
+async function getDataFromArchive(mongoDB, fromDate, allData = false) {
+    let lines = await mongoDB.getMeasurements(fromDate);
     let arr = [];
 
     for (let line of lines) {
-        let arrayOfDataInLine = line.split(",");
-        let dateTimeArrayLine = arrayOfDataInLine[0].split(" ");
-        let dateArrayLine = dateTimeArrayLine[0].split(".");
-        let timeArrayLine = dateTimeArrayLine[1].split(":");
-    
-        let archiveDate = new Date();
-        archiveDate.setFullYear(parseInt(dateArrayLine[2]));
-        archiveDate.setMonth(parseInt(dateArrayLine[1] - 1));
-        archiveDate.setDate(dateArrayLine[0]);
-        archiveDate.setHours(timeArrayLine[0]);
-        archiveDate.setMinutes(timeArrayLine[1]);
-        archiveDate.setSeconds(0);
-        archiveDate.setMilliseconds(0);
-
-        if (archiveDate > fromDate || allData) {
+        if (line.date > fromDate || allData) {
             arr.push(new DataStructure(
-                archiveDate,
-                arrayOfDataInLine[1],
-                arrayOfDataInLine[2],
-                arrayOfDataInLine[3],
-                arrayOfDataInLine[4],
-                arrayOfDataInLine[5],
-                arrayOfDataInLine[6],
-                arrayOfDataInLine[7],
-                arrayOfDataInLine[8],
+                line.date,
+                line.temperature,
+                line.dewPoint,
+                line.humidity,
+                line.barometer,
+                line.avgWindSpeed,
+                line.highWindSpeed,
+                line.directionWind,
+                line.rainfall
             ).convertToDatabaseObject());
         }
     }
@@ -101,9 +152,9 @@ function sendDataToDatabase(config, data) {
     });
 }
 
-async function updateDatabaseData(config) {
+async function updateDatabaseData(config, mongoDB) {
     let lastDate = await getLastServerTime(config);
-    let data = getDataFromArchive(config, lastDate);
+    let data = await getDataFromArchive(mongoDB, lastDate);
     await sendDataToDatabase(config, data);
 }
 
@@ -113,5 +164,6 @@ module.exports = {
     getDataFromArchive,
     sendDataToDatabase,
     updateDatabaseData,
-    saveDataToArchive
+    saveDataToArchive,
+    MongoDB
 };

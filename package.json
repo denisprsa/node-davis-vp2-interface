@@ -23,13 +23,16 @@
     "author": "denisp",
     "license": "MIT",
     "dependencies": {
-        "request": "^2.87.0",
+        "mongodb": "3.6.0",
+        "request": "2.87.0",
         "serialport": "6.2.1"
     },
     "devDependencies": {
-        "eslint": "^6.8.0",
+        "@types/mongodb": "3.5.25",
+        "eslint": "7.6.0",
+        "eslint-plugin-promise": "^4.2.1",
         "istanbul": "1.1.0-alpha.1",
-        "mocha": "5.2.0"
+        "mocha": "8.1.1"
     },
     "bugs": {
         "url": "https://github.com/denisprsa/node-davis-vp2-interface/issues"
