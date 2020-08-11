@@ -82,39 +82,6 @@ class MongoDB {
     }
 }
 
-function getLastArchiveTime(config) {
-    const archiveData = getDataFromArchive(config, "", true);
-    const lastLine = archiveData[archiveData.length - 1];
-
-    return new Date(lastLine.timestamp * 1000);
-}
-
-function saveDataToArchive(measurements, config) {
-    const archiveData = getDataFromArchive(config, "", true);
-    const lastLine = archiveData[archiveData.length - 1];
-
-    for (let measurement of measurements) {
-        if (new Date(lastLine.timestamp * 1000) < measurement.metricData.date) {
-            fs.appendFileSync(config.fileDBLocation, measurement.line + "\n");
-        }
-    }
-}
-
-function validateArchiveData(config) {
-    let data = fs.readFileSync(config.fileDBLocation, "utf-8");
-    let lines = data.trim().split("\n");
-    let validatedLines = [];
-
-    for (let line of lines) {
-        if (line.includes(",")) {
-            validatedLines.push(line);
-        }
-    }
-
-    fs.writeFileSync(config.fileDBLocationSave || config.fileDBLocation, `${validatedLines.join("\n")}\n`, "utf-8");
-    return validatedLines;
-}
-
 async function getDataFromArchive(mongoDB, fromDate, allData = false) {
     let lines = await mongoDB.getMeasurements(fromDate);
     let arr = [];
@@ -160,10 +127,8 @@ async function updateDatabaseData(config, mongoDB) {
 
 module.exports = {
     getLastServerTime,
-    getLastArchiveTime,
     getDataFromArchive,
     sendDataToDatabase,
     updateDatabaseData,
-    saveDataToArchive,
     MongoDB
 };
