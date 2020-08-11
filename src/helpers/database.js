@@ -28,7 +28,7 @@ class MongoDB {
         return new Promise((resolve, reject) => {
             MongoClient.connect(config.mongodb.uri, {useNewUrlParser: true, useUnifiedTopology: true}, (err, client) => {
                 if (err) {
-                    reject(err);
+                    return reject(err);
                 }
 
                 this.db = client.db(config.mongodb.database);
