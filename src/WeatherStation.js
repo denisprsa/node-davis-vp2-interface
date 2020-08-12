@@ -6,7 +6,7 @@ const CalculateCRC = require("./helpers/calculate-crc");
 const ProcessArchiveData = require("./helpers/process-archive-data");
 const GetWantedDate = require("./helpers/get-wanted-date");
 const ProcessLiveData = require("./helpers/process-live-data");
-const { updateDatabaseData, getLastServerTime } = require("./helpers/database");
+const { updateDatabaseData, getLastServerTime, saveDataToArchive } = require("./helpers/database");
 const SendDataWU = require("./helpers/send-to-wu");
 
 module.exports = class WeatherStation {
@@ -123,7 +123,7 @@ module.exports = class WeatherStation {
     /**
      * Starts live reading from sensors
      */
-    startLiveReading(config, mongoDB, timeout) {
+    startLiveReading(config, timeout) {
         if (timeout === undefined) {
             let wantedDate = GetWantedDate();
             let nowDate = new Date();
@@ -143,7 +143,7 @@ module.exports = class WeatherStation {
 
                 Logger.log("line", processedData.line);
 
-                await mongoDB.saveDataToArchive([processedData]);
+                saveDataToArchive([processedData], config);
 
                 let date = new Date();
                 let wuDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}`;
@@ -169,7 +169,7 @@ module.exports = class WeatherStation {
                 }
 
                 try {
-                    await updateDatabaseData(config, mongoDB);
+                    await updateDatabaseData(config);
                 } catch (e) {
                     Logger.error(e);
                 }
