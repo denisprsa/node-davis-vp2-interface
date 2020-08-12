@@ -73,6 +73,10 @@ class MongoDB {
     }
 
     async saveDataToArchive(measurements) {
+        if (!measurements.length) {
+            return 0;
+        }
+
         const items = measurements.map(value => value.metricData);
         const response = await this.db
             .collection(this.collection)
