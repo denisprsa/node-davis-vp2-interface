@@ -138,8 +138,13 @@ module.exports = class WeatherStation {
                 await this.serialPort.write(Buffer.from("LPS 2 1\n"));
 
                 await this.serialPort.waiForDataToRead();
-                let data = await this.serialPort.read();
-                let processedData = ProcessLiveData(data, config);
+                const data = await this.serialPort.read();
+                const currentDate = new Date();
+                currentDate.setSeconds(0);
+                currentDate.setMilliseconds(0);
+                currentDate.setMinutes(currentDate.getMinutes() - 60);
+                const lastHourMeasurements = await mongoDB.getMeasurements(currentDate);
+                let processedData = ProcessLiveData(data, lastHourMeasurements);
 
                 Logger.log("line", processedData.line);
 

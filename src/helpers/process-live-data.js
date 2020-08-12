@@ -2,7 +2,7 @@ const Logger = require("../Logger");
 const ProcessLiveDataRainFall = require("./process-live-data-rainfall");
 const fs = require("fs");
 
-module.exports = (data, config) => {
+module.exports = (data, lastHourMeasurements) => {
     // Date Time
     let date = new Date();
     date.setSeconds(0);
@@ -27,9 +27,7 @@ module.exports = (data, config) => {
     let rainfall1H = data.readInt16LE(55);
     let rainfall = rainfall1H * 0.2;
 
-
-    let archiveData = fs.readFileSync(config.fileDBLocation, "utf-8");
-    rainfall = ProcessLiveDataRainFall(new Date(date), rainfall, archiveData);
+    rainfall = ProcessLiveDataRainFall(new Date(date), rainfall, lastHourMeasurements);
     if (rainfall < 0) {
         rainfall = 0;
     }

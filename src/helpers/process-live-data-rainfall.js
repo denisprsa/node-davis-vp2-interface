@@ -1,31 +1,22 @@
 
-module.exports = (currentDate, currentRainfall, data) => {
+module.exports = (currentDate, currentRainfall, data = []) => {
     currentDate.setMinutes(currentDate.getMinutes() - 60);
-    let lines = data.trim().split("\n");
     let sumRain = 0;
-    let lastLines = lines.slice(-50);
 
-    for (let line of lastLines) {
+    console.log('process live data rainfall');
+    console.log(data);
 
-        let arrayOfDataInLine = line.split(",");
-        let dateTimeArrayLine = arrayOfDataInLine[0].split(" ");
-        let dateArrayLine = dateTimeArrayLine[0].split(".");
-        let timeArrayLine = dateTimeArrayLine[1].split(":");
-    
-        let lastDate = new Date();
-        lastDate.setFullYear(parseInt(dateArrayLine[2]));
-        lastDate.setMonth(parseInt(dateArrayLine[1] - 1));
-        lastDate.setDate(dateArrayLine[0]);
-        lastDate.setHours(timeArrayLine[0]);
-        lastDate.setMinutes(timeArrayLine[1]);
-        lastDate.setSeconds(0);
-        lastDate.setMilliseconds(0);
-        
-        if (currentDate <= lastDate) {
-            let rain = arrayOfDataInLine[arrayOfDataInLine.length - 2];
+    for (let line of data) {
+        if (currentDate <= line.date) {
+            let rain = line.rainfall;
             sumRain += Number(rain);
         }
     }
+
+    console.log(sumRain);
+    console.log(currentRainfall);
+    console.log(currentRainfall - sumRain);
+    console.log('====  end ====');
 
     return currentRainfall - sumRain;
 };
