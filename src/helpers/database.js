@@ -2,7 +2,7 @@ const request = require("request");
 const fs = require("fs");
 const DataStructure = require("../DataStructure");
 const Logger = require("../Logger");
-const { MongoClient, Server } = require("mongodb");
+const { MongoClient } = require("mongodb");
 
 
 function getLastServerTime(config) {
@@ -91,19 +91,17 @@ async function getDataFromArchive(mongoDB, fromDate, allData = false) {
     let arr = [];
 
     for (let line of lines) {
-        if (line.date > fromDate || allData) {
-            arr.push(new DataStructure(
-                line.date,
-                line.temperature,
-                line.dewPoint,
-                line.humidity,
-                line.barometer,
-                line.avgWindSpeed,
-                line.highWindSpeed,
-                line.dirWindSpeed,
-                line.rainfall
-            ).convertToDatabaseObject());
-        }
+        arr.push(new DataStructure(
+            line.date,
+            line.temperature,
+            line.dewPoint,
+            line.humidity,
+            line.barometer,
+            line.avgWindSpeed,
+            line.highWindSpeed,
+            line.dirWindSpeed,
+            line.rainfall
+        ).convertToDatabaseObject());
     }
 
     return arr;
