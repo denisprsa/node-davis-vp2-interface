@@ -96,7 +96,7 @@ async function getDataFromArchive(mongoDB, fromDate, allData = false) {
                 line.barometer,
                 line.avgWindSpeed,
                 line.highWindSpeed,
-                line.directionWind,
+                line.dirWindSpeed,
                 line.rainfall
             ).convertToDatabaseObject());
         }
