@@ -80,8 +80,8 @@ module.exports = class WeatherStation {
         let pages = testData.readInt16LE(1);
         let row = testData.readInt16LE(3);
 
-        console.log("PAGE: ", pages);
-        console.log("ROW: ", row);
+        Logger.log("PAGE: ", pages);
+        Logger.log("ROW: ", row);
         
         // ACK to start receiving measurements
         await this.serialPort.write(this.ack);
@@ -165,7 +165,8 @@ module.exports = class WeatherStation {
                 wundergroundURL += `&baromin=${processedData.USData.barometer}`;
                 wundergroundURL += `&dewptf=${processedData.USData.dewPoint}`;
                 wundergroundURL += `&humidity=${processedData.USData.humidity}`;
-                Logger.log(wundergroundURL);
+                
+                Logger.log("WUNDERGROUND", wundergroundURL);
 
                 try {
                     await SendDataWU(wundergroundURL);
