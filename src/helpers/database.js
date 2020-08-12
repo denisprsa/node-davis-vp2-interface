@@ -64,7 +64,7 @@ class MongoDB {
 
         const measurements = await this.db
             .collection(this.collection)
-            .find({}, {projection:{_id: 0}})
+            .find(query, {projection:{_id: 0}})
             .sort({"date": -1})
             .toArray();
 
