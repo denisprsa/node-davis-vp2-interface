@@ -59,7 +59,7 @@ class MongoDB {
         let query = {};
 
         if (fromDate) {
-            query.date = {"$gte": fromDate};
+            query.date = {"$gt": fromDate};
         }
 
         const measurements = await this.db
