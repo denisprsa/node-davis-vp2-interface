@@ -177,7 +177,7 @@ module.exports = class WeatherStation {
                 try {
                     let wantedDate = GetWantedDate();
                     let nowDate = new Date();
-                    await this.startLiveReading(config, wantedDate - nowDate);
+                    await this.startLiveReading(config, mongoDB, wantedDate - nowDate);
                     resolve();
                 } catch (e) {
                     reject(e);
