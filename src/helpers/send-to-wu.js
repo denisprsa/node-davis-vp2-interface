@@ -4,7 +4,7 @@ const Logger = require("../Logger");
 
 module.exports = async (url) => {
     return new Promise((resolve, reject) => {
-        request.get(url,(err, httpResponse, body) => {
+        request.get(url, {timeout:30000}, (err, httpResponse, body) => {
             if (err) {
                 return reject(err);
             }
