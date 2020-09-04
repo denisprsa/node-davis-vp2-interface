@@ -8,10 +8,15 @@ const LastDateForArchive = require("./src/helpers/get-rounded-date-for-archive")
 const UpdateTime = require("./src/helpers/update-time");
 
 async function main() {
+    try {
+        await UpdateTime();
+    } catch (e) {
+        Logger.error(e);
+    }
+
     const mongoDB = new MongoDB();
 
     await mongoDB.initialize(config);
-    await UpdateTime();
     await weatherStation.wakeUpStation();
 
     const lastDateFromDB = await mongoDB.getLastArchiveTime(config);
